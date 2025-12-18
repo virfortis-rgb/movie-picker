@@ -1,0 +1,11 @@
+@import url(./css/fonts.css);
+
+body {
+
+}
+
+.page {
+  margin: 0 auto;
+  height: 100vh;
+  width: fit-content;
+}
