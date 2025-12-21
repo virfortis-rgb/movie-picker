@@ -2,9 +2,10 @@ const omdbapiUrl = "http://www.omdbapi.com/";
 const apiKey = "709ff2f7";
 // const url = `${omdbapiUrl}?S=${movieInput}&apikey=${apiKey}`
 
-const template = document.querySelector("#movieCardTemplate");
+const templateCards = document.querySelector("#movie-cards-template");
 const movieCardsContainer = document.querySelector(".container-cards-movies");
-
+const templateCard = document.querySelector("#movie-card-template");
+const movieCardContainer = document.querySelector("#container-main-card");
 const movies = [
   {
     title: "KPop Demon Hunters",
@@ -48,30 +49,35 @@ const movies = [
   }
 ];
 
+const displayMainMovie = (movies) => {
+    const movie = movies[0];
+    const cloneCard = templateCard.content.cloneNode(true);
+    cloneCard.querySelector(".main-card-title").innerText = movie.title;
+    cloneCard.querySelector(".main-card-text").innerText = movie.description;
+    movieCardContainer.appendChild(cloneCard);
+};
+
 const displayMovies = (movies) => {
   movies.forEach((movie) => {
-    const clone = template.content.cloneNode(true);
-    clone.querySelector(".card-title").innerText = movie.title;
-    clone.querySelector(".card-text").innerText = movie.description;
-    movieCardsContainer.appendChild(clone);
+    const cloneCards = templateCards.content.cloneNode(true);
+    cloneCards.querySelector(".card-title").innerText = movie.title;
+    cloneCards.querySelector(".card-text").innerText = movie.description;
+    movieCardsContainer.appendChild(cloneCards);
   })
 };
 
-const removeCards = (list) => {
-  while (list.hasChildNodes()) {
-    list.removeChild(list.firstChild);
-  }
-};
 const submit = (event) => {
   event.preventDefault();
   movieCardsContainer.innerHTML = "";
+  movieCardContainer.innerHTML = "";
   // const movieInput = document
   // fetch(url)
   //   .then(response => response.json())
   //   .then(data => displayMovies(data.Search));
   console.log("Hello from submit");
+  document.querySelector("#container-results").classList.remove("d-none");
   displayMovies(movies);
-
+  displayMainMovie(movies);
 };
 
 const form = document.querySelector("#submit");
@@ -93,7 +99,8 @@ const coreGenres = [
   "Mystery",
   "Crime",
   "Documentary",
-  "Animation"
+  "Animation",
+  "Anything is cool"
 ];
 
 const dropDown = document.querySelector("#select-genre");
