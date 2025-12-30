@@ -1,11 +1,3 @@
-const omdbapiUrl = "http://www.omdbapi.com/";
-const apiKey = "709ff2f7";
-// const url = `${omdbapiUrl}?S=${movieInput}&apikey=${apiKey}`
-
-const templateCards = document.querySelector("#movie-cards-template");
-const movieCardsContainer = document.querySelector(".container-cards-movies");
-const templateCard = document.querySelector("#movie-card-template");
-const movieCardContainer = document.querySelector("#container-main-card");
 const movies = [
   {
     title: "KPop Demon Hunters",
@@ -48,6 +40,45 @@ const movies = [
     description: "Romantic comedy about a small-town girl chasing her dreams and finding unexpected love while filming a reality show." // From popular list :contentReference[oaicite:10]{index=10}
   }
 ];
+const coreGenres = [
+  "Action",
+  "Adventure",
+  "Comedy",
+  "Drama",
+  "Horror",
+  "Thriller",
+  "Romance",
+  "Science Fiction",
+  "Fantasy",
+  "Mystery",
+  "Crime",
+  "Documentary",
+  "Animation",
+  "Anything is cool"
+];
+// Add genres to drop-down
+const dropDown = document.querySelector("#select-genre");
+let value = 1;
+coreGenres.forEach((genre) => {
+  dropDown.insertAdjacentHTML("beforeend", `<option value="${value}">${genre}</option>`);
+  value += 1;
+});
+
+// Get input from user
+const genreInput = document.querySelector("#select-genre");
+const moviesInput = document.querySelector("#checkMovies");
+const seriesInput = document.querySelector("#checkSeries");
+
+// API things
+const omdbapiUrl = "http://www.omdbapi.com/";
+const apiKey = "709ff2f7";
+const url = `${omdbapiUrl}?S=${moviesInput}&apikey=${apiKey}`
+
+// Display results to user
+const templateCards = document.querySelector("#movie-cards-template");
+const movieCardsContainer = document.querySelector(".container-cards-movies");
+const templateCard = document.querySelector("#movie-card-template");
+const movieCardContainer = document.querySelector("#container-main-card");
 
 const displayMainMovie = (movies) => {
     const movie = movies[0];
@@ -70,11 +101,12 @@ const submit = (event) => {
   event.preventDefault();
   movieCardsContainer.innerHTML = "";
   movieCardContainer.innerHTML = "";
-  // const movieInput = document
+  const selectedGenre = coreGenres[genreInput.value - 1]; //movie genre from coreGenres array
   // fetch(url)
   //   .then(response => response.json())
   //   .then(data => displayMovies(data.Search));
   console.log("Hello from submit");
+  console.log(`You selected genre: ${selectedGenre} and movies: ${moviesInput.checked} and series: ${seriesInput.checked}`)
   document.querySelector("#container-results").classList.remove("d-none");
   displayMovies(movies);
   displayMainMovie(movies);
@@ -82,30 +114,3 @@ const submit = (event) => {
 
 const form = document.querySelector("#submit");
 form.addEventListener("click", submit)
-
-// *************************************************************
-// Add genres to drop-down
-
-const coreGenres = [
-  "Action",
-  "Adventure",
-  "Comedy",
-  "Drama",
-  "Horror",
-  "Thriller",
-  "Romance",
-  "Science Fiction",
-  "Fantasy",
-  "Mystery",
-  "Crime",
-  "Documentary",
-  "Animation",
-  "Anything is cool"
-];
-
-const dropDown = document.querySelector("#select-genre");
-let value = 1;
-coreGenres.forEach((genre) => {
-  dropDown.insertAdjacentHTML("beforeend", `<option value="${value}">${genre}</option>`);
-  value += 1;
-});
