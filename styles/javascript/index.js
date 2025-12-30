@@ -68,12 +68,30 @@ coreGenres.forEach((genre) => {
 const genreInput = document.querySelector("#select-genre");
 const moviesInput = document.querySelector("#checkMovies");
 const seriesInput = document.querySelector("#checkSeries");
-
-// API
-const omdbapiUrl = "http://www.omdbapi.com/";
-const apiKey = "709ff2f7";
 let moviesOrSeries = "";
-const url = `${omdbapiUrl}?S=${moviesOrSeries}&apikey=${apiKey}`
+const urlInput = (moviesBoolean, seriesBoolean) => {
+  if(moviesInput === true) {
+    moviesOrSeries = "movie";
+  } else if(seriesInput === true){
+    moviesOrSeries = "tv";
+  }
+};
+
+// API 1
+const omdbapiUrl = "http://www.omdbapi.com/";
+const omdbapiKey = "709ff2f7";
+const url = `${omdbapiUrl}?S=${moviesOrSeries}&apikey=${omdbapiKey}`
+
+// API 2
+const tdmnapiUrl = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${urlInput}`;
+const tdmbapiKey = "fcc88ec7ca39184c4e52b6ac9d73e301";
+const options = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmY2M4OGVjN2NhMzkxODRjNGU1MmI2YWM5ZDczZTMwMSIsIm5iZiI6MTc2NzA2NjQ2OC40Niwic3ViIjoiNjk1MzRiNjQ4OGM4ZjYwZTlmODkwMTNjIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.LhDUMSqHRNjKipLm4Og0h266suKV61dNp1M-bGbyazM'
+  }
+};
 
 // Display results to user
 const templateCards = document.querySelector("#movie-cards-template");
@@ -98,24 +116,20 @@ const displayMovies = (movies) => {
   })
 };
 
-const urlImput = (moviesBoolean, seriesBoolean) => {
-  if(moviesInput === true) {
-    moviesOrSeries = "movie";
-  } else if(seriesInput === true){
-    moviesOrSeries = "series";
-  }
-};
-
 const submit = (event) => {
   event.preventDefault();
   movieCardsContainer.innerHTML = "";
   movieCardContainer.innerHTML = "";
   const selectedGenre = coreGenres[genreInput.value - 1]; //movie genre from coreGenres array
   console.log(`You selected genre: ${selectedGenre} and movies: ${moviesInput.checked} and series: ${seriesInput.checked}`)
-  urlImput(moviesInput.checked, seriesInput.checked);
-  fetch(url)
-    .then(response => response.json())
-    .then(data => console.log(data));
+  urlInput(moviesInput.checked, seriesInput.checked);
+  // fetch(url)
+  //   .then(response => response.json())
+  //   .then(data => console.log(data));
+  fetch(tdmnapiUrl, options)
+  .then(res => res.json())
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
   document.querySelector("#container-results").classList.remove("d-none");
   displayMovies(movies);
   displayMainMovie(movies);
