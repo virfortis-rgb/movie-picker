@@ -69,10 +69,11 @@ const genreInput = document.querySelector("#select-genre");
 const moviesInput = document.querySelector("#checkMovies");
 const seriesInput = document.querySelector("#checkSeries");
 
-// API things
+// API
 const omdbapiUrl = "http://www.omdbapi.com/";
 const apiKey = "709ff2f7";
-const url = `${omdbapiUrl}?S=${moviesInput}&apikey=${apiKey}`
+let moviesOrSeries = "";
+const url = `${omdbapiUrl}?S=${moviesOrSeries}&apikey=${apiKey}`
 
 // Display results to user
 const templateCards = document.querySelector("#movie-cards-template");
@@ -97,16 +98,24 @@ const displayMovies = (movies) => {
   })
 };
 
+const urlImput = (moviesBoolean, seriesBoolean) => {
+  if(moviesInput === true) {
+    moviesOrSeries = "movie";
+  } else if(seriesInput === true){
+    moviesOrSeries = "series";
+  }
+};
+
 const submit = (event) => {
   event.preventDefault();
   movieCardsContainer.innerHTML = "";
   movieCardContainer.innerHTML = "";
   const selectedGenre = coreGenres[genreInput.value - 1]; //movie genre from coreGenres array
-  // fetch(url)
-  //   .then(response => response.json())
-  //   .then(data => displayMovies(data.Search));
-  console.log("Hello from submit");
   console.log(`You selected genre: ${selectedGenre} and movies: ${moviesInput.checked} and series: ${seriesInput.checked}`)
+  urlImput(moviesInput.checked, seriesInput.checked);
+  fetch(url)
+    .then(response => response.json())
+    .then(data => console.log(data));
   document.querySelector("#container-results").classList.remove("d-none");
   displayMovies(movies);
   displayMainMovie(movies);
