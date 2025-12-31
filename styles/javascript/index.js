@@ -40,51 +40,100 @@ const movies = [
     description: "Romantic comedy about a small-town girl chasing her dreams and finding unexpected love while filming a reality show." // From popular list :contentReference[oaicite:10]{index=10}
   }
 ];
-const coreGenres = [
-  "Action",
-  "Adventure",
-  "Comedy",
-  "Drama",
-  "Horror",
-  "Thriller",
-  "Romance",
-  "Science Fiction",
-  "Fantasy",
-  "Mystery",
-  "Crime",
-  "Documentary",
-  "Animation",
-  "Anything is cool"
-];
-// Add genres to drop-down
-const dropDown = document.querySelector("#select-genre");
-let value = 1;
-coreGenres.forEach((genre) => {
-  dropDown.insertAdjacentHTML("beforeend", `<option value="${value}">${genre}</option>`);
-  value += 1;
-});
+// const coreGenres = [
+//   {
+//     "id": 28,
+//     "name": "Action"
+//   },
+//   {
+//     "id": 12,
+//     "name": "Adventure"
+//   },
+//   {
+//     "id": 16,
+//     "name": "Animation"
+//   },
+//   {
+//     "id": 35,
+//     "name": "Comedy"
+//   },
+//   {
+//     "id": 80,
+//     "name": "Crime"
+//   },
+//   {
+//     "id": 99,
+//     "name": "Documentary"
+//   },
+//   {
+//     "id": 18,
+//     "name": "Drama"
+//   },
+//   {
+//     "id": 10751,
+//     "name": "Family"
+//   },
+//   {
+//     "id": 14,
+//     "name": "Fantasy"
+//   },
+//   {
+//     "id": 36,
+//     "name": "History"
+//   },
+//   {
+//     "id": 27,
+//     "name": "Horror"
+//   },
+//   {
+//     "id": 10402,
+//     "name": "Music"
+//   },
+//   {
+//     "id": 9648,
+//     "name": "Mystery"
+//   },
+//   {
+//     "id": 10749,
+//     "name": "Romance"
+//   },
+//   {
+//     "id": 878,
+//     "name": "Science Fiction"
+//   },
+//   {
+//     "id": 10770,
+//     "name": "TV Movie"
+//   },
+//   {
+//     "id": 53,
+//     "name": "Thriller"
+//   },
+//   {
+//     "id": 10752,
+//     "name": "War"
+//   },
+//   {
+//     "id": 37,
+//     "name": "Western"
+//   }
+// ]
 
 // Get input from user
+
 const genreInput = document.querySelector("#select-genre");
 const moviesInput = document.querySelector("#checkMovies");
 const seriesInput = document.querySelector("#checkSeries");
-let moviesOrSeries = "";
-const urlInput = (moviesBoolean, seriesBoolean) => {
-  if(moviesInput === true) {
-    moviesOrSeries = "movie";
-  } else if(seriesInput === true){
-    moviesOrSeries = "tv";
-  }
-};
+// let moviesOrSeries = "";
+let url = "";
 
 // API 1
-const omdbapiUrl = "http://www.omdbapi.com/";
-const omdbapiKey = "709ff2f7";
-const url = `${omdbapiUrl}?S=${moviesOrSeries}&apikey=${omdbapiKey}`
+// const omdbapiUrl = "http://www.omdbapi.com/";
+// const omdbapiKey = "709ff2f7";
+// const omdbUrl = `${omdbapiUrl}?S=${moviesOrSeries}&apikey=${omdbapiKey}`
 
 // API 2
-const tdmnapiUrl = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${urlInput}`;
-const tdmbapiKey = "fcc88ec7ca39184c4e52b6ac9d73e301";
+const tmbbapiKey = "fcc88ec7ca39184c4e52b6ac9d73e301";
 const options = {
   method: 'GET',
   headers: {
@@ -92,6 +141,28 @@ const options = {
     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmY2M4OGVjN2NhMzkxODRjNGU1MmI2YWM5ZDczZTMwMSIsIm5iZiI6MTc2NzA2NjQ2OC40Niwic3ViIjoiNjk1MzRiNjQ4OGM4ZjYwZTlmODkwMTNjIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.LhDUMSqHRNjKipLm4Og0h266suKV61dNp1M-bGbyazM'
   }
 };
+const urlInput = (moviesBoolean, seriesBoolean, genre) => {
+  if(moviesBoolean === true) {
+    // moviesOrSeries = "movie";
+    url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&region=South%20Africa&sort_by=popularity.desc&with_genres=${genre}`;
+  } else if(seriesBoolean === true){
+    // moviesOrSeries = "tv";
+    url = `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genre}`;
+  }
+  return url;
+};
+
+const dropDown = document.querySelector("#select-genre");
+addEventListener("load", (event) => {
+  fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
+    .then(response => response.json())
+    .then((data) => {let coreGenres = data.genres
+      coreGenres.forEach((genre) => {
+        dropDown.insertAdjacentHTML("beforeend", `<option value="${genre.id}">${genre.name}</option>`);
+      });
+    })
+    .catch(err => console.error(err));
+})
 
 // Display results to user
 const templateCards = document.querySelector("#movie-cards-template");
@@ -116,19 +187,16 @@ const displayMovies = (movies) => {
   })
 };
 
+// Event Listener
+
 const submit = (event) => {
   event.preventDefault();
   movieCardsContainer.innerHTML = "";
   movieCardContainer.innerHTML = "";
-  const selectedGenre = coreGenres[genreInput.value - 1]; //movie genre from coreGenres array
-  console.log(`You selected genre: ${selectedGenre} and movies: ${moviesInput.checked} and series: ${seriesInput.checked}`)
-  urlInput(moviesInput.checked, seriesInput.checked);
-  // fetch(url)
-  //   .then(response => response.json())
-  //   .then(data => console.log(data));
-  fetch(tdmnapiUrl, options)
-  .then(res => res.json())
-  .then(res => console.log(res))
+  console.log(`You selected genre: ${genreInput.value} and movies: ${moviesInput.checked} and series: ${seriesInput.checked}`)
+  fetch(urlInput(moviesInput.checked, seriesInput.checked, genreInput.value), options)
+  .then(response => response.json())
+  .then(data => console.log(data))
   .catch(err => console.error(err));
   document.querySelector("#container-results").classList.remove("d-none");
   displayMovies(movies);
