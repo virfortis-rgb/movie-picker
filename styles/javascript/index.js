@@ -91,3 +91,7 @@ const submit = (event) => {
 
 const form = document.querySelector("#submit");
 form.addEventListener("click", submit)
+
+// redirect to Netflix
+
+const netflixUrl = `https://www.netflix.com/search?q=${TODO movie name goes here}`;

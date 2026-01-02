@@ -16,3 +16,10 @@
   font-weight: 300;
   font-style: normal;
 }
+
+.inter-bold {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: bold;
+}
