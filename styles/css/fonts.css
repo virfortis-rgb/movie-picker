@@ -7,5 +7,12 @@
 .cutive-mono-regular {
   font-family: "Cutive Mono", monospace;
   font-weight: 400;
+  font-style: bold;
+}
+
+.inter-p {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
   font-style: normal;
 }

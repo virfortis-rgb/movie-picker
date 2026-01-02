@@ -40,7 +40,7 @@ addEventListener("load", (event) => {
     .then(response => response.json())
     .then((data) => {let coreGenres = data.genres
       coreGenres.forEach((genre) => {
-        dropDown.insertAdjacentHTML("beforeend", `<option value="${genre.id}">${genre.name}</option>`);
+        dropDown.insertAdjacentHTML("beforeend", `<option class="inter-p" value="${genre.id}">${genre.name}</option>`);
       });
     })
     .catch(err => console.error(err));
@@ -57,7 +57,7 @@ const displayMainMovie = (movies) => {
     const cloneCard = templateCard.content.cloneNode(true);
     cloneCard.querySelector(".main-card-title").innerText = movie.title;
     cloneCard.querySelector(".main-card-text").innerText = movie.overview;
-    cloneCard.querySelector("#main-card-img").src = `https://image.tmdb.org/t/p/original/${movie.poster_path}`;
+    cloneCard.querySelector("#main-card-img").src = `https://image.tmdb.org/t/p/original/${movie.backdrop_path}`;
     movieCardContainer.appendChild(cloneCard);
 };
 
